@@ -45,7 +45,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
 
         if (user == null)
         {
-            return Unauthorized("Invalid username");
+            return Unauthorized("Invalid username or password");
         }
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -58,13 +58,13 @@ public class AccountController(DataContext context, ITokenService tokenService) 
             {
                 if (computedHash[i] != user.PasswordHash[i])
                 {
-                    return Unauthorized("Invalid password");
+                    return Unauthorized("Invalid username or password");
                 }
             }
         }
         else // avoid array index error if the hashes aren't the same length
         {
-            return Unauthorized("Invalid password");
+            return Unauthorized("Invalid username or password");
         }
 
         return new UserDto

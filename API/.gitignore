@@ -7,7 +7,7 @@
 .env
 
 #secret keys
-.appsettings.*
+API/appsettings.json
 
 # User-specific files
 *.rsuser

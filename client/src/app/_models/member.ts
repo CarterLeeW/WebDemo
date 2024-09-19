@@ -1,5 +1,8 @@
 import { Photo } from "./photo"
 
+/**
+ * Interface Member represents an individual represented on the platform
+ */
 export interface Member {
     id: number
     username: string

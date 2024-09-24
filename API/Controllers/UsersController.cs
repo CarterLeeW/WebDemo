@@ -77,6 +77,11 @@ public class UsersController(
             PublicId = result.PublicId
         };
 
+        // first photo uploaded is always the main image
+        if (user.Photos.Count == 0)
+        {
+            photo.IsMain = true;
+        }
         user.Photos.Add(photo);
 
         if (await userRepository.SaveAllAsync())

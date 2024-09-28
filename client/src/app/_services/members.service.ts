@@ -20,9 +20,11 @@ export class MembersService {
   getMembers(userParams: UserParams) {
     let params = this.setPaginationHeaders(userParams.pageNumber, userParams.PageSize);
 
+    // used for filtering page results
     params = params.append('minAge', userParams.minAge);
     params = params.append('maxAge', userParams.maxAge);
     params = params.append('gender', userParams.gender);
+    params = params.append('orderBy', userParams.orderBy);
 
     return this.http.get<Member[]>(this.baseUrl + 'users', {observe: 'response', params}).subscribe({
       next: response => {

@@ -5,6 +5,7 @@ namespace API.Entities;
 
 public class AppUser
 {
+    // general
     public int Id { get; set; }
     public required string UserName { get; set; }
     public byte[] PasswordHash { get; set; } = [];
@@ -19,8 +20,12 @@ public class AppUser
     public string? LookingFor { get; set; }
     public required string City { get; set; }
     public required string Country { get; set; }
+    // photos
     public List<Photo> Photos { get; set; } = [];
+    // likes
     public List<UserLike> LikedByUsers { get; set; } = [];
     public List<UserLike> LikedUsers { get; set; } = [];
-    
+    // messages
+    public List<Message> MessagesSent { get; set; } = [];
+    public List<Message> MessagesReceived { get; set; } = [];
 }

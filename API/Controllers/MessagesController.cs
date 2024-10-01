@@ -56,4 +56,12 @@ public class MessagesController(IMessageRepository messageRepository,
         
         return messages;
     }
+
+    [HttpGet("thread/{recipientUsername}")]
+    public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string recipientUsername)
+    {
+        var currentUsername = User.GetUsername();
+
+        return Ok(await messageRepository.GetMessageThread(currentUsername, recipientUsername));
+    }
 }

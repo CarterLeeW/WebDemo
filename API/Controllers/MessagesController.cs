@@ -64,4 +64,39 @@ public class MessagesController(IMessageRepository messageRepository,
 
         return Ok(await messageRepository.GetMessageThread(currentUsername, recipientUsername));
     }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteMessage(int id)
+    {
+        var username = User.GetUsername();
+        var message = await messageRepository.GetMessage(id);
+        if (message == null)
+        {
+            return BadRequest("Cannot delete this message");
+        }
+
+        // Should the user be allowed to delete this message?
+        if (message.SenderUsername != username && message.RecipientUsername != username)
+        {
+            return Forbid();
+        }
+        if (message.SenderUsername == username)
+        {
+            message.SenderDeleted = true;
+        }
+        if (message.RecipientUsername == username)
+        {
+            message.RecipientDeleted = true;
+        }
+        if (message is {SenderDeleted: true, RecipientDeleted: true})
+        {
+            messageRepository.DeleteMessage(message);
+        }
+
+        if (await messageRepository.SaveAllAsync())
+        {
+            return Ok();
+        }
+        return BadRequest("Problem deleting the message");
+    }
 }

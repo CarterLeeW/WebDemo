@@ -31,8 +31,6 @@ public class Seed
 
             // standardize username and create password hash and salt, which are not in the seed data
             user.UserName = user.UserName.ToLower();
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
-            user.PasswordSalt = hmac.Key;
 
             context.Users.Add(user);
         }

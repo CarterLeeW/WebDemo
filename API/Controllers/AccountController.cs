@@ -25,8 +25,6 @@ public class AccountController(DataContext context, ITokenService tokenService, 
 
         var user = mapper.Map<AppUser>(registerDto);
         user.UserName = registerDto.Username.ToLower();
-        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
-        user.PasswordSalt = hmac.Key;
 
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -48,25 +46,6 @@ public class AccountController(DataContext context, ITokenService tokenService, 
             .FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
 
         if (user == null)
-        {
-            return Unauthorized("Invalid username or password");
-        }
-
-        using var hmac = new HMACSHA512(user.PasswordSalt);
-
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-        
-        if (computedHash.Length == user.PasswordHash.Length)
-        {
-            for (int i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != user.PasswordHash[i])
-                {
-                    return Unauthorized("Invalid username or password");
-                }
-            }
-        }
-        else // avoid array index error if the hashes aren't the same length
         {
             return Unauthorized("Invalid username or password");
         }

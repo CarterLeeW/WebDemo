@@ -3,15 +3,16 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
 public class Seed
 {
-    public static async Task SeedUsers(DataContext context)
+    public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
-        if (await context.Users.AnyAsync())
+        if (await userManager.Users.AnyAsync())
         {
             return;
         }
@@ -27,14 +28,9 @@ public class Seed
 
         foreach (AppUser user in users)
         {
-            using var hmac = new HMACSHA512();
-
-            // standardize username and create password hash and salt, which are not in the seed data
-            user.UserName = user.UserName.ToLower();
-
-            context.Users.Add(user);
+            user.UserName = user.UserName!.ToLower();
+            // also saves to the database
+            await userManager.CreateAsync(user, "Pa$$w0rd");
         }
-
-        await context.SaveChangesAsync();
     }
 }

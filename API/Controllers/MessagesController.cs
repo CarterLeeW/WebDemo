@@ -37,6 +37,7 @@ public class MessagesController(IMessageRepository messageRepository,
             Recipient = recipient,
             SenderUsername = sender.UserName,
             RecipientUsername = recipient.UserName,
+            DateMessageSent = DateTime.UtcNow,
             Content = createMessageDto.Content
         };
         messageRepository.AddMessage(message);
